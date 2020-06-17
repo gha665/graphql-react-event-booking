@@ -7,4 +7,18 @@ const eventSchema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
 });
+
+mudule.exports = mongoose.model("Event", eventSchema);
