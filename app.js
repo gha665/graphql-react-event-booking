@@ -48,7 +48,15 @@ app.use(
     // resolver
     rootValue: {
       events: () => {
-        return events;
+        return Event.find()
+          .then((events) => {
+            return events.map((event) => {
+              return { ...event._doc, _id: event.id }; // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
+            });
+          })
+          .catch((err) => {
+            throw err;
+          });
       },
 
       createEvent: (args) => {
@@ -72,7 +80,7 @@ app.use(
           .save() // <--- with constructor
           .then((result) => {
             console.log(result);
-            return { ...result._doc };
+            return { ...result._doc, id: result._doc._id.toString() };
           })
           .catch((err) => {
             console.log(err);
