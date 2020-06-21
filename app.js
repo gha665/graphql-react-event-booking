@@ -24,6 +24,12 @@ app.use(
             date: String! 
         }
 
+        type User {
+            _id: ID!
+            email: String!
+            password: String
+        }
+
         input EventInput {
             title: String!
             description: String!
