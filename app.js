@@ -104,8 +104,14 @@ app.use(
       },
 
       createUser: (args) => {
-        return bcrypt
-          .hash(args.userInput.password, 12)
+        // to eliminate all non-unique users
+        return User.findOne({ email: args.userInput.email })
+          .then((user) => {
+            if (user) {
+              throw new Error("User already exists.");
+            }
+            return bcrypt.hash(args.userInput.password, 12);
+          })
           .then((hashedPassword) => {
             const user = new User({
               email: args.userInput.email,
@@ -114,7 +120,7 @@ app.use(
             return user.save();
           })
           .then((result) => {
-            return { ...result.doc, _id: result.id };
+            return { ...result._doc, password: null, _id: result.id };
           })
           .catch((err) => {
             throw err;
