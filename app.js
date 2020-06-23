@@ -87,14 +87,27 @@ app.use(
           description: args.eventInput.description,
           price: +args.eventInput.price,
           date: new Date(args.eventInput.date),
+          creator: "5ef16569a0b9ac0ae7fe8f52",
         });
+
+        let createdEvent;
 
         // events.push(event); <--- before constructor
         return event
           .save() // <--- with constructor
           .then((result) => {
-            console.log(result);
-            return { ...result._doc, id: result._doc._id.toString() };
+            createdEvent = { ...result._doc, id: result._doc._id.toString() };
+            return User.findById("5ef16569a0b9ac0ae7fe8f52");
+          })
+          .then((user) => {
+            if (!user) {
+              throw new Error("User not found.");
+            }
+            user.createdEvents.push(event);
+            return user.save();
+          })
+          .then((result) => {
+            return createdEvent;
           })
           .catch((err) => {
             console.log(err);
