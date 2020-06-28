@@ -10,6 +10,7 @@ const events = (eventIds) => {
         return {
           ...event._doc,
           _id: event.id,
+          date: new Date(event._doc.date).toISOString(),
           creator: user.bind(this, event.creator),
         };
       });
@@ -40,9 +41,10 @@ module.exports = {
         return events.map((event) => {
           return {
             ...event._doc,
-            _id: event.id,
+            _id: event.id, // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
+            date: new Date(event._doc.date).toISOString(),
             creator: user.bind(this, event._doc.creator),
-          }; // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
+          };
         });
       })
       .catch((err) => {
@@ -75,7 +77,8 @@ module.exports = {
       .then((result) => {
         createdEvent = {
           ...result._doc,
-          id: result._doc._id.toString(),
+          id: result._doc._id.toString(), // <--- OR _id: event.id
+          date: new Date(event._doc.date).toISOString(),
           creator: user.bind(this, result._doc.creator),
         };
         return User.findById("5ef16569a0b9ac0ae7fe8f52");
