@@ -4,18 +4,22 @@ const Event = require("../../models/event");
 const User = require("../../models/user");
 const Booking = require("../../models/booking");
 
+// to reduce redundancy we create the transformEvent function to work with all the fields needed
+const transformEvent = (eventToTransform) => {
+  return {
+    ...eventToTransform._doc,
+    _id: eventToTransform.id,
+    date: new Date(eventToTransform._doc.date).toISOString(),
+    creator: user.bind(this, eventToTransform.creator),
+  };
+};
+
 const events = async (eventIds) => {
   try {
     const events = await Event.find({ _id: { $in: eventIds } });
-    events.map((event) => {
-      return {
-        ...event._doc,
-        _id: event.id,
-        date: new Date(event._doc.date).toISOString(),
-        creator: user.bind(this, event.creator),
-      };
+    return events.map((event) => {
+      return transformEvent(event);
     });
-    return events;
   } catch (err) {
     throw err;
   }
@@ -24,11 +28,7 @@ const events = async (eventIds) => {
 const singleEvent = async (eventId) => {
   try {
     const event = await Event.findById(eventId);
-    return {
-      ...event._doc,
-      id: eventId,
-      creator: user.bind(this, event.creator),
-    };
+    transformEvent(event);
   } catch (err) {
     throw err;
   }
@@ -52,12 +52,13 @@ module.exports = {
     try {
       const events = await Event.find();
       return events.map((event) => {
-        return {
-          ...event._doc,
-          _id: event.id, // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
-          date: new Date(event._doc.date).toISOString(),
-          creator: user.bind(this, event._doc.creator),
-        };
+        // return {
+        //   ...event._doc,
+        //   _id: event.id, // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
+        //   date: new Date(event._doc.date).toISOString(),
+        //   creator: user.bind(this, event._doc.creator),
+        // };
+        return transformEvent(event);
       });
     } catch (err) {
       throw err;
@@ -104,12 +105,13 @@ module.exports = {
     try {
       // events.push(event); <--- before constructor
       const result = await event.save(); // <--- with constructor
-      createdEvent = {
-        ...result._doc,
-        _id: result._doc._id.toString(), // <--- OR _id: event.id
-        date: new Date(event._doc.date).toISOString(),
-        creator: user.bind(this, result._doc.creator),
-      };
+      //   createdEvent = {
+      //     ...result._doc,
+      //     _id: result._doc._id.toString(), // <--- OR _id: event.id
+      //     date: new Date(event._doc.date).toISOString(),
+      //     creator: user.bind(this, result._doc.creator),
+      //   };
+      createdEvent = transformEvent(result);
       const creator = await User.findById("5ef804f31f89223a56e43688");
 
       if (!creator) {
@@ -131,7 +133,7 @@ module.exports = {
       // to eliminate all non-unique users
       const existingUser = await User.findOne({ email: args.userInput.email });
       if (existingUser) {
-        throw new Error("User exists already.");
+        throw new Error("User already exists.");
       }
       const hashedPassword = await bcrypt.hash(args.userInput.password, 12);
 
@@ -167,11 +169,7 @@ module.exports = {
   cancelBooking: async (args) => {
     try {
       const booking = await Booking.findById(args.bookingId).populate("event");
-      const event = await {
-        ...booking.event._doc,
-        _id: booking.event.id,
-        creator: user.bind(this, booking.event._doc.creator),
-      };
+      const event = transformEvent(booking.event);
       await Booking.deleteOne({ _id: args.bookingId });
       return event;
     } catch (err) {
