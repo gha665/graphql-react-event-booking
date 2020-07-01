@@ -16,10 +16,7 @@ app.use(
   "/graphql",
   graphqlHttp({
     schema: graphQlSchema,
-
-    // resolver
-    rootValue: graphQlResolvers,
-
+    rootValue: graphQlResolvers, // <--- resolver
     // debugging development tool that apperas in browser, where we can play around and test the app
     // "in-browser tool for writing, validating, and testing GraphQL queries"
     graphiql: true,
@@ -28,7 +25,7 @@ app.use(
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-boqwd.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-ntrwp.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
   )
   .then(() => {
     app.listen(3000);
@@ -36,3 +33,5 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+  
