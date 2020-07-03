@@ -3,13 +3,14 @@ const bcrypt = require("bcryptjs");
 const Event = require("../../models/event");
 const User = require("../../models/user");
 const Booking = require("../../models/booking");
+const { dateToString } = require("../../helpers/date");
 
 // to reduce redundancy we create the transformEvent function to work with all the fields needed
 const transformEvent = (eventToTransform) => {
   return {
     ...eventToTransform._doc,
     _id: eventToTransform.id,
-    date: new Date(eventToTransform._doc.date).toISOString(),
+    date: dateToString(event._doc.date),
     creator: user.bind(this, eventToTransform.creator),
   };
 };
@@ -54,7 +55,7 @@ module.exports = {
       return events.map((event) => {
         // return {
         //   ...event._doc,
-        //   _id: event.id, // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
+        //   _id: event.id,                   // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
         //   date: new Date(event._doc.date).toISOString(),
         //   creator: user.bind(this, event._doc.creator),
         // };
@@ -74,8 +75,8 @@ module.exports = {
           _id: booking.id,
           user: user.bind(this, booking._doc.user),
           event: singleEvent.bind(this, booking._doc.event),
-          createdAt: new Date(booking._doc.createdAt).toISOString(),
-          updatedAt: new Date(booking._doc.updatedAt).toISOString(),
+          createdAt: dateToString(booking._doc.createdAt),
+          updatedAt: dateToString(booking._doc.updatedAt),
         };
       });
     } catch (err) {
@@ -107,7 +108,7 @@ module.exports = {
       const result = await event.save(); // <--- with constructor
       //   createdEvent = {
       //     ...result._doc,
-      //     _id: result._doc._id.toString(), // <--- OR _id: event.id
+      //     _id: result._doc._id.toString(),         // <--- OR _id: event.id
       //     date: new Date(event._doc.date).toISOString(),
       //     creator: user.bind(this, result._doc.creator),
       //   };
@@ -125,7 +126,7 @@ module.exports = {
       console.log(err);
       throw err;
     }
-    // return event; // <--- before constructor
+    // return event;                                   // <--- before constructor
   },
 
   createUser: async (args) => {
@@ -162,8 +163,8 @@ module.exports = {
       _id: result.id,
       user: user.bind(this, booking._doc.user),
       event: singleEvent.bind(this, booking._doc.event),
-      createdAt: new Date(result._doc.createdAt).toISOString(),
-      updatedAt: new Date(result._doc.updatedAt).toISOString(),
+      createdAt: dateToString(result._doc.createdAt),
+      updatedAt: dateToString(result._doc.updatedAt),
     };
   },
   cancelBooking: async (args) => {
