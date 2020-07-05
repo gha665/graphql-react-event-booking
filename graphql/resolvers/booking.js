@@ -1,18 +1,7 @@
+const Event = require("../../models/event");
 const Booking = require("../../models/booking");
-const { dateToString } = require("../../helpers/date");
-const { singleEvent, user } = require("./merge");
 
-// to reduce redundancy we create the transformBooking function to work with all the fields needed
-const transformBooking = (bookingToTransform) => {
-  return {
-    ...bookingToTransform._doc,
-    _id: bookingToTransform.id,
-    user: user.bind(this, bookingToTransform._doc.user),
-    event: singleEvent.bind(this, bookingToTransform._doc.event),
-    createdAt: dateToString(bookingToTransform._doc.createdAt),
-    updatedAt: dateToString(bookingToTransform._doc.updatedAt),
-  };
-};
+const { transformBooking, transformEvent } = require("./merge");
 
 module.exports = {
   bookings: async () => {

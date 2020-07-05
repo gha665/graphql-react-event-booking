@@ -1,16 +1,5 @@
 const Event = require("../../models/event");
-const { dateToString } = require("../../helpers/date");
-const { user } = require("./merge");
-
-// to reduce redundancy we create the transformEvent function to work with all the fields needed
-const transformEvent = (eventToTransform) => {
-  return {
-    ...eventToTransform._doc,
-    _id: eventToTransform.id,
-    date: dateToString(event._doc.date),
-    creator: user.bind(this, eventToTransform.creator),
-  };
-};
+const { transformEvent } = require("./merge");
 
 module.exports = {
   events: async () => {
