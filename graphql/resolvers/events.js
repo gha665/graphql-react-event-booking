@@ -19,7 +19,7 @@ module.exports = {
     }
   },
 
-  createEvent: async (args) => {
+  createEvent: async (args, req) => {
     // const event = {
     //   _id: Math.random().toString(),
     //   title: args.eventInput.title,
@@ -27,6 +27,10 @@ module.exports = {
     //   price: +args.eventInput.price,
     //   date: args.eventInput.date,
     // };
+
+    if (!req.isAuth) {
+      throw new Error("Unauthenticated!");
+    }
 
     const event = new Event({
       title: args.eventInput.title,
