@@ -28,6 +28,7 @@ module.exports = {
     //   date: args.eventInput.date,
     // };
 
+    // AUTHENTICATION CHECK
     if (!req.isAuth) {
       throw new Error("Unauthenticated!");
     }
