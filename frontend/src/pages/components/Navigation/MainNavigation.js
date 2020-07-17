@@ -9,13 +9,13 @@ const mainNavigation = (props) => (
     <nav className="main-navigation__item">
       <ul>
         <li>
-          <Navlink to="/auth">Authenticate</Navlink>
+          <NavLink to="/auth">Authenticate</NavLink>
         </li>
         <li>
-          <Navlink to="/events">Events</Navlink>
+          <NavLink to="/events">Events</NavLink>
         </li>
         <li>
-          <Navlink to="/bookings">Bookings</Navlink>
+          <NavLink to="/bookings">Bookings</NavLink>
         </li>
       </ul>
     </nav>
