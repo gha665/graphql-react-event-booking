@@ -13,7 +13,7 @@ function App() {
     <BrowserRouter>
       <React.Fragment>
         <MainNavigation />
-        <main>
+        <main className="main-content">
           <Switch>
             <Redirect from="/" to="/auth" exact />
             <Route path="/auth" component={AuthPage} />
