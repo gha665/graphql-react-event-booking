@@ -7,14 +7,14 @@ module.exports = {
     try {
       const events = await Event.find();
       return events.map((event) => {
-        // return {
-        //   ...event._doc,
-        //   _id: event.id,                   // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
-        //   date: new Date(event._doc.date).toISOString(),
-        //   creator: user.bind(this, event._doc.creator),
-        // };
-        return transformEvent(event);
-      });
+            // return {
+            //   ...event._doc,
+            //   _id: event.id,                   // <--- <<<_id: EVENT.ID>>> is a shortcut provided by Mongoose to read the id. But result._doc._id.toString() is also effective.
+            //   date: new Date(event._doc.date).toISOString(),
+            //   creator: user.bind(this, event._doc.creator),
+            // };
+            return transformEvent(event);
+          });
     } catch (err) {
       throw err;
     }
