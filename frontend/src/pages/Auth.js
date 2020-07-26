@@ -38,7 +38,19 @@ class AuthPage extends Component {
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Failed");
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        console.log(resData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   render() {
@@ -56,7 +68,7 @@ class AuthPage extends Component {
 
         <div className="form-actions">
           <button type="submit">Submit</button>
-          <button type="button">Switch to Signup</button>
+          <button type="button">Switch to Login</button>
         </div>
       </form>
     );
