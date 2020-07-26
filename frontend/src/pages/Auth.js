@@ -12,15 +12,33 @@ class AuthPage extends Component {
   }
 
   submitHandler = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // <--- to make sure no request gets sent
     const email = this.emailEl.current.value;
-    const password = this.password.current.value;
+    const password = this.passwordEl.current.value;
 
     if (email.trim().length === 0 || password.trim().length === 0) {
       return;
     }
 
-    console.log(email, password);
+    // send data to server
+    const requestBody = {
+      query: `
+        mutation {
+            createUser(userInput: {email: "${email}", password: "${password}"}) {
+                _id
+                email
+            }
+        }
+      `,
+    };
+
+    fetch("http://localhost:8000/graphql", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   };
 
   render() {
