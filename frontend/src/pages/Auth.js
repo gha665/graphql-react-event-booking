@@ -4,12 +4,23 @@ import "./Auth.css";
 import { json } from "body-parser";
 
 class AuthPage extends Component {
+  state = {
+    isLogin: true,
+  };
+
   // REFERENCES TO SEND REQUESTS
   constructor(props) {
     super(props);
     this.emailEl = React.createRef();
     this.passwordEl = React.createRef();
   }
+
+  // logged in state toggler
+  switchModeHandler = () => {
+    this.state((prevState) => {
+      return { isLogin: !prevState.isLogin };
+    });
+  };
 
   submitHandler = (event) => {
     event.preventDefault(); // <--- to make sure no request gets sent
@@ -68,7 +79,9 @@ class AuthPage extends Component {
 
         <div className="form-actions">
           <button type="submit">Submit</button>
-          <button type="button">Switch to Login</button>
+          <button type="button" onClick={this.switchModeHandler}>
+            Switch to {this.state.isLogin ? "Signup" : "Login"}
+          </button>
         </div>
       </form>
     );
