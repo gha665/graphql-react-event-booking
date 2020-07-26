@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import "./Auth.css";
-import { json } from "body-parser";
+// import { json } from "body-parser";
 import AuthContext from "../context/auth-context";
 
 class AuthPage extends Component {
