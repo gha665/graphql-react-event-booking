@@ -15,9 +15,9 @@ class AuthPage extends Component {
     this.passwordEl = React.createRef();
   }
 
-  // logged in state toggler
+  // STATE TOGGLER FOR LOGGED IN
   switchModeHandler = () => {
-    this.state((prevState) => {
+    this.setState((prevState) => {
       return { isLogin: !prevState.isLogin };
     });
   };
@@ -31,17 +31,33 @@ class AuthPage extends Component {
       return;
     }
 
-    // send data to server
-    const requestBody = {
+    // SEND TADA TO SERVER
+    // Log in
+    let requestBody = {
       query: `
-        mutation {
-            createUser(userInput: {email: "${email}", password: "${password}"}) {
-                _id
-                email
+        query {
+            login (email: "${email}", password: "${password}") {
+                userId 
+                token 
+                tokenExpiration
             }
         }
-      `,
+        `,
     };
+
+    // Sign Up
+    if (!this.state.isLogin) {
+      requestBody = {
+        query: `
+                mutation {
+                    createUser(userInput: {email: "${email}", password: "${password}"}) {
+                        _id
+                        email
+                    }
+                }
+              `,
+      };
+    }
 
     fetch("http://localhost:8000/graphql", {
       method: "POST",
