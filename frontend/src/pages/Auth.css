@@ -1,10 +1,10 @@
 .auth-form {
-  width: 20rem;
+  width: 25rem;
   max-width: 80%;
   margin: 5rem auto;
 }
 
-.form-control label,
+/* .form-control label,
 .form-control input {
   display: block;
   width: 100%;
@@ -34,4 +34,4 @@
 .form-actions button:active {
   background: #01a7a7;
   border-color: #01a7a7;
-}
+} */
