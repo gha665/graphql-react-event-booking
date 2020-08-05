@@ -29,7 +29,17 @@ class EventsPage extends Component {
     const date = this.dateElRef.current.value;
     const description = this.descriptionElRef.current.value;
 
+    if (
+      title.trim().length === 0 ||
+      price.trim().length === 0 ||
+      date.trim().length === 0 ||
+      description.trim().length === 0
+    ) {
+      return;
+    }
+
     const event = { title, price, date, description };
+    console.log(event);
   };
 
   modalCancelHandler = () => {
