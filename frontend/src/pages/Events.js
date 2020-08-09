@@ -45,10 +45,17 @@ class EventsPage extends Component {
     const event = { title, price, date, description };
     console.log(event);
 
+  };
+  
+  modalCancelHandler = () => {
+    this.setState({ creating: false });
+  };
+  
+  fetchEvents() {
     const requestBody = {
       query: `
-                mutation {
-                    createEvent(eventInput: {title: "${title}", description: "${description}", price: ${price}, date: "${date}"}) {
+                query {
+                    events {
                         _id
                         title
                         description
@@ -62,15 +69,14 @@ class EventsPage extends Component {
                 }
               `,
     };
-
+  
     const token = this.context.token;
-
+  
     fetch("http://localhost:8000/graphql", {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        "Content-Type": "application/json"
       },
     })
       .then((res) => {
@@ -85,11 +91,8 @@ class EventsPage extends Component {
       .catch((err) => {
         console.log(err);
       });
-  };
 
-  modalCancelHandler = () => {
-    this.setState({ creating: false });
-  };
+  }
 
   render() {
     return (
@@ -131,12 +134,18 @@ class EventsPage extends Component {
             </form>
           </Modal>
         )}
-        <div className="events-control">
-          <p>Share your own Events!</p>
-          <button className="btn" onClick={this.startCreateEventHandler}>
-            Create Event
-          </button>
-        </div>
+        {this.context.token && (
+          <div className="events-control">
+            <p>Share your own Events!</p>
+            <button className="btn" onClick={this.startCreateEventHandler}>
+              Create Event
+            </button>
+          </div>
+        )}
+        <ul className="events__list">
+          <li className="events__list-item">Test</li>
+          <li className="events__list-item">Test</li>
+        </ul>
       </React.Fragment>
     );
   }
