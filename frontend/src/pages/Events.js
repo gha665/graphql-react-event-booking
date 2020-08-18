@@ -1,14 +1,14 @@
 import React, { Component } from "react";
+
 import Modal from "../components/Modal/Modal";
 import Backdrop from "../components/Backdrop/Backdrop";
 import AuthContext from "../context/auth-context";
-
 import "./Events.css";
-import authContext from "../context/auth-context";
 
 class EventsPage extends Component {
   state = {
     creating: false,
+    events: [],
   };
 
   static contextType = AuthContext;
@@ -19,7 +19,11 @@ class EventsPage extends Component {
     this.titleElRef = React.createRef();
     this.priceElRef = React.createRef();
     this.dateElRef = React.createRef();
-    this.decriptionElRef = React.createRef();
+    this.descriptionElRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.fetchEvents();
   }
 
   startCreateEventHandler = () => {
@@ -45,56 +49,102 @@ class EventsPage extends Component {
     const event = { title, price, date, description };
     console.log(event);
 
-  };
-  
-  modalCancelHandler = () => {
-    this.setState({ creating: false });
-  };
-  
-  fetchEvents() {
     const requestBody = {
       query: `
-                query {
-                    events {
-                        _id
-                        title
-                        description
-                        date
-                        price
-                        creator {
-                          _id
-                          email
-                        }
-                    }
-                }
-              `,
+          mutation {
+            createEvent(eventInput: {title: "${title}", description: "${description}", price: ${price}, date: "${date}"}) {
+              _id
+              title
+              description
+              date
+              price
+              creator {
+                _id
+                email
+              }
+            }
+          }
+        `,
     };
-  
+
     const token = this.context.token;
-  
+
     fetch("http://localhost:8000/graphql", {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
       },
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
-          throw new Error("Failed");
+          throw new Error("Failed!");
         }
         return res.json();
       })
       .then((resData) => {
-        console.log(resData);
+        this.fetchEvents();
       })
       .catch((err) => {
         console.log(err);
       });
+  };
 
+  modalCancelHandler = () => {
+    this.setState({ creating: false });
+  };
+
+  fetchEvents() {
+    const requestBody = {
+      query: `
+          query {
+            events {
+              _id
+              title
+              description
+              date
+              price
+              creator {
+                _id
+                email
+              }
+            }
+          }
+        `,
+    };
+
+    fetch("http://localhost:8000/graphql", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Failed!");
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        const events = resData.data.events;
+        this.setState({ events: events });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
+    const eventList = this.state.events.map((event) => {
+      return (
+        <li key={event._id} className="events__list-item">
+          {event.title}
+        </li>
+      );
+    });
+
     return (
       <React.Fragment>
         {this.state.creating && <Backdrop />}
@@ -109,19 +159,15 @@ class EventsPage extends Component {
             <form>
               <div className="form-control">
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" ref={this.titleElRef}></input>
+                <input type="text" id="title" ref={this.titleElRef} />
               </div>
               <div className="form-control">
                 <label htmlFor="price">Price</label>
-                <input type="number" id="price" ref={this.priceElRef}></input>
+                <input type="number" id="price" ref={this.priceElRef} />
               </div>
               <div className="form-control">
                 <label htmlFor="date">Date</label>
-                <input
-                  type="datetime-local"
-                  id="date"
-                  ref={this.dateElRef}
-                ></input>
+                <input type="datetime-local" id="date" ref={this.dateElRef} />
               </div>
               <div className="form-control">
                 <label htmlFor="description">Description</label>
@@ -129,7 +175,7 @@ class EventsPage extends Component {
                   id="description"
                   rows="4"
                   ref={this.descriptionElRef}
-                ></textarea>
+                />
               </div>
             </form>
           </Modal>
@@ -142,10 +188,7 @@ class EventsPage extends Component {
             </button>
           </div>
         )}
-        <ul className="events__list">
-          <li className="events__list-item">Test</li>
-          <li className="events__list-item">Test</li>
-        </ul>
+        <ul className="events__list">{eventList}</ul>
       </React.Fragment>
     );
   }
