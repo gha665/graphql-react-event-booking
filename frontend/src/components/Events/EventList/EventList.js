@@ -6,10 +6,7 @@ import "./EventList.css";
 const eventList = (props) => {
   const events = props.events.map((event) => {
     return (
-        <EventItem />
-      <li key={event._id} className="events__list-item">
-        {event.title}
-      </li>
+      <EventItem key={event._id} eventId={event._id} title={event.title} />
     );
   });
 
