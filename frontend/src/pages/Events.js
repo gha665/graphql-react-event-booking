@@ -10,6 +10,7 @@ class EventsPage extends Component {
   state = {
     creating: false,
     events: [],
+    isLoading: false,
   };
 
   static contextType = AuthContext;
@@ -110,6 +111,8 @@ class EventsPage extends Component {
   };
 
   fetchEvents() {
+    this.setState({ isLoading: true });
+
     const requestBody = {
       query: `
           query {
@@ -139,10 +142,11 @@ class EventsPage extends Component {
       })
       .then((resData) => {
         const events = resData.data.events;
-        this.setState({ events: events });
+        this.setState({ events: events, isLoading: false });
       })
       .catch((err) => {
         console.log(err);
+        this.setState({ isLoading: false });
       });
   }
 
@@ -190,10 +194,14 @@ class EventsPage extends Component {
             </button>
           </div>
         )}
-        <EventList
-          events={this.state.events}
-          authUserId={this.context.userId}
-        />
+        {this.state.isLoading ? (
+          <div class="lds-dual-ring"></div>
+        ) : (
+          <EventList
+            events={this.state.events}
+            authUserId={this.context.userId}
+          />
+        )}
       </React.Fragment>
     );
   }
