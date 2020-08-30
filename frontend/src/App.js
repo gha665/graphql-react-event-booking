@@ -7,7 +7,6 @@ import EventsPage from "./pages/Events";
 import MainNavigation from "./components/Navigation/MainNavigation";
 import AuthContext from "./context/auth-context";
 
-// import user from "../../models/user";
 import "./App.css";
 
 class App extends Component {
@@ -16,7 +15,7 @@ class App extends Component {
     userId: null,
   };
 
-  login = (token, userId, tokenExpiraion) => {
+  login = (token, userId, tokenExpiration) => {
     this.setState({ token: token, userId: userId });
   };
 

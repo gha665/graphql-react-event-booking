@@ -39,26 +39,26 @@ class AuthPage extends Component {
     let requestBody = {
       query: `
         query {
-            login (email: "${email}", password: "${password}") {
-                userId 
-                token 
-                tokenExpiration
-            }
+          login(email: "${email}", password: "${password}") {
+            userId
+            token
+            tokenExpiration
+          }
         }
-        `,
+      `,
     };
 
     // Sign Up
     if (!this.state.isLogin) {
       requestBody = {
         query: `
-                mutation {
-                    createUser(userInput: {email: "${email}", password: "${password}"}) {
-                        _id
-                        email
-                    }
-                }
-              `,
+          mutation {
+            createUser(userInput: {email: "${email}", password: "${password}"}) {
+              _id
+              email
+            }
+          }
+        `,
       };
     }
 
@@ -71,7 +71,7 @@ class AuthPage extends Component {
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
-          throw new Error("Failed");
+          throw new Error("Failed!");
         }
         return res.json();
       })
@@ -93,7 +93,7 @@ class AuthPage extends Component {
     return (
       <form className="auth-form" onSubmit={this.submitHandler}>
         <div className="form-control">
-          <label htmlFor="email">E-mail</label>
+          <label htmlFor="email">E-Mail</label>
           <input type="email" id="email" ref={this.emailEl} />
         </div>
 

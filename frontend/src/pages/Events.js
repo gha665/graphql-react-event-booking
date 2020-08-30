@@ -6,7 +6,6 @@ import EventList from "../components/Events/EventList/EventList";
 import Spinner from "../components/Spinner/Spinner";
 import AuthContext from "../context/auth-context";
 import "./Events.css";
-import eventItem from "../components/Events/EventList/EventItem/EventItem";
 
 class EventsPage extends Component {
   state = {
@@ -63,10 +62,6 @@ class EventsPage extends Component {
               description
               date
               price
-              creator {
-                _id
-                email
-              }
             }
           }
         `,
@@ -115,7 +110,6 @@ class EventsPage extends Component {
 
   fetchEvents() {
     this.setState({ isLoading: true });
-
     const requestBody = {
       query: `
           query {
@@ -125,6 +119,10 @@ class EventsPage extends Component {
               description
               date
               price
+              creator {
+                _id
+                email
+              }
             }
           }
         `,

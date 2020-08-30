@@ -16,7 +16,7 @@ const events = async (eventIds) => {
 const singleEvent = async (eventId) => {
   try {
     const event = await Event.findById(eventId);
-    transformEvent(event);
+    return transformEvent(event);
   } catch (err) {
     throw err;
   }
@@ -36,24 +36,24 @@ const user = async (userId) => {
 };
 
 // to reduce redundancy we create the transformEvent function to work with all the fields needed
-const transformEvent = (eventToTransform) => {
+const transformEvent = (event) => {
   return {
-    ...eventToTransform._doc,
-    _id: eventToTransform.id,
+    ...event._doc,
+    _id: event.id,
     date: dateToString(event._doc.date),
-    creator: user.bind(this, eventToTransform.creator),
+    creator: user.bind(this, event.creator),
   };
 };
 
 // to reduce redundancy we create the transformBooking function to work with all the fields needed
-const transformBooking = (bookingToTransform) => {
+const transformBooking = (booking) => {
   return {
-    ...bookingToTransform._doc,
-    _id: bookingToTransform.id,
-    user: user.bind(this, bookingToTransform._doc.user),
-    event: singleEvent.bind(this, bookingToTransform._doc.event),
-    createdAt: dateToString(bookingToTransform._doc.createdAt),
-    updatedAt: dateToString(bookingToTransform._doc.updatedAt),
+    ...booking._doc,
+    _id: booking.id,
+    user: user.bind(this, booking._doc.user),
+    event: singleEvent.bind(this, booking._doc.event),
+    createdAt: dateToString(booking._doc.createdAt),
+    updatedAt: dateToString(booking._doc.updatedAt),
   };
 };
 

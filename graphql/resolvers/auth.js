@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 const User = require("../../models/user");
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
       // to eliminate all non-unique users
       const existingUser = await User.findOne({ email: args.userInput.email });
       if (existingUser) {
-        throw new Error("User already exists.");
+        throw new Error("User exists already.");
       }
       const hashedPassword = await bcrypt.hash(args.userInput.password, 12);
 
@@ -29,7 +30,7 @@ module.exports = {
   login: async ({ email, password }) => {
     const user = await User.findOne({ email: email });
     if (!user) {
-      throw new Error("User does not exist");
+      throw new Error("User does not exist!");
     }
     const isEqual = await bcrypt.compare(password, user.password); // <--- "password" is whatever user types, "user.password" is what's stored in DB
     if (!isEqual) {
