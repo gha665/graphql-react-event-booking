@@ -102,19 +102,23 @@ class BookingsPage extends Component {
       });
   };
 
+  changeOutputTypeHandler = (outputType) => {};
+
   render() {
-    return (
-      <React.Fragment>
-        {this.state.isLoading ? (
-          <Spinner />
-        ) : (
-          <BookingList
-            bookings={this.state.bookings}
-            onDelete={this.deleteBookingHandler}
-          />
-        )}
-      </React.Fragment>
-    );
+    let content = <Spinner />;
+    if (!this.state.isLoading) {
+      content = (
+        <React.Fragment>
+          <div>
+            <button onClick={}>List</button>
+            <button>Chart</button>
+          </div>
+          <div></div>
+        </React.Fragment>
+      );
+    }
+
+    return <React.Fragment>{content}</React.Fragment>;
   }
 }
 
