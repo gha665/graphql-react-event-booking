@@ -3,11 +3,13 @@ import React, { Component } from "react";
 import Spinner from "../components/Spinner/Spinner";
 import AuthContext from "../context/auth-context";
 import BookingList from "../components/Bookings/BookingList/BookingList";
+import BookingsChart from "../components/Bookings/BookingsChart/BookingsChart";
 
 class BookingsPage extends Component {
   state = {
     isLoading: false,
     bookings: [],
+    outputType: "list",
   };
 
   static contextType = AuthContext;
@@ -102,7 +104,13 @@ class BookingsPage extends Component {
       });
   };
 
-  changeOutputTypeHandler = (outputType) => {};
+  changeOutputTypeHandler = (outputType) => {
+    if (outputType === "list") {
+      this.setState({ outputType: "list" });
+    } else {
+      this.setState({ outputType: "chart" });
+    }
+  };
 
   render() {
     let content = <Spinner />;
@@ -110,10 +118,20 @@ class BookingsPage extends Component {
       content = (
         <React.Fragment>
           <div>
-            <button onClick={}>List</button>
-            <button>Chart</button>
+            <button onClick={this.changeOutputTypeHandler.bind(this, "list")}>
+              List
+            </button>
+            <button onClick={this.changeOutputTypeHandler.bind(this, "chart")}>
+              Chart
+            </button>
           </div>
-          <div></div>
+          <div>
+            {this.state.outputType === "list" ? (
+              <BookingList bookings={this.state.bookings} />
+            ) : (
+              <BookingsChart bookings={this.state.bookings} />
+            )}
+          </div>
         </React.Fragment>
       );
     }
