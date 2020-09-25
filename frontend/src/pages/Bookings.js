@@ -118,16 +118,11 @@ class BookingsPage extends Component {
       content = (
         <React.Fragment>
           <div>
-            <button onClick={this.changeOutputTypeHandler.bind(this, "list")}>
-              List
-            </button>
-            <button onClick={this.changeOutputTypeHandler.bind(this, "chart")}>
-              Chart
-            </button>
-          </div>
-          <div>
             {this.state.outputType === "list" ? (
-              <BookingList bookings={this.state.bookings} />
+              <BookingList
+                bookings={this.state.bookings}
+                onDelete={this.deleteBookingHandler}
+              />
             ) : (
               <BookingsChart bookings={this.state.bookings} />
             )}
