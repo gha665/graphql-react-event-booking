@@ -1,18 +1,19 @@
 import React from "react";
-import bookingsChart from "../BookingsChart/BookingsChart";
+
+import "./BookingsControls.css";
 
 const bookingsControl = (props) => {
   return (
     <div className="bookings-control">
       <button
         className={props.activeOutputType === "list" ? "active" : ""}
-        onClick={this.changeOutputTypeHandler.bind(this, "list")}
+        onClick={props.onChange.bind(this, "list")}
       >
         List
       </button>
       <button
         className={props.activeOutputType === "chart" ? "active" : ""}
-        onClick={this.changeOutputTypeHandler.bind(this, "chart")}
+        onClick={props.onChange.bind(this, "chart")}
       >
         Chart
       </button>
